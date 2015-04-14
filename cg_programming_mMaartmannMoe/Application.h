@@ -21,3 +21,18 @@
 using namespace std;
 using namespace glm;
 
+// Defines...
+#define APP_NAME "My First Window"
+#define EXIT_WITH_ERROR -1
+#define EXIT_WITH_SUCCESS 0
+#define OPEN_GL_VERSION_MAJOR 3		// Specifies OpenGL 3.3
+#define OPEN_GL_VERSION_MINOR 3
+#define ANTIALIASING 4				// Nx anti-aliasing
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
+#define GLFW_FAIL 0
+
+// External Globals...
+extern GLFWwindow* window;
+extern GLint shaderStatus;
+extern bool activeRef;

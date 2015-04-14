@@ -2,19 +2,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "Application.h"
-
-// For display console messages
-#include <stdio.h>
-#include <stdlib.h>
-
-// OpenGL includes: glew, glfw, glm
-#define GLEW_STATIC
-// ALWAYS include glew.h BEFORE bl.h AND glfw3.h
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
-using namespace glm;
+#include "LoadShader.h"
 
 // An array of 3 vectors which represents 3 vertices
 static const GLfloat g_vertex_buffer_data[] = {
@@ -65,33 +53,44 @@ int main() {
 	}
 
 	///////////////////////// WEEK 02 /////////////////////////////////////////////////////////////////////
-	// Create a Vertex Array Object; Set as current one...												 //
-	GLuint VertexArrayID;																				 //
-	glGenVertexArrays(1, &VertexArrayID);																 //
-	glBindVertexArray(VertexArrayID);																	 //
-																										 //
-	// This will identify our vertex buffer																 //
-	GLuint vertexBuffer;																				 //
-																										 //
-	// Generate 1 buffer, put the resulting identifier in vertexBuffer									 //
-	glGenBuffers(1, &vertexBuffer);																		 //
-																										 //
-	// Bind the vertexBuffer...																			 //
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);														 //
-																										 //
-	// Give vertices to OpenGL...																		 //
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);	 //
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Create a Vertex Array Object; Set as current one...												
+	GLuint VertexArrayID;																				
+	glGenVertexArrays(1, &VertexArrayID);																
+	glBindVertexArray(VertexArrayID);																	
+																										
+	// This will identify our vertex buffer																
+	GLuint vertexBuffer;																				
+																										
+	// Generate 1 buffer, put the resulting identifier in vertexBuffer									
+	glGenBuffers(1, &vertexBuffer);																		
+																										
+	// Bind the vertexBuffer...																			
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);														
+																										
+	// Give vertices to OpenGL...																		
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);	
+	
 
+	// Create and compile our GLSL program from the shaders
+	GLuint programID = LoadShaders("Shaders/SimpleVertexShader.vertexshader", "Shaders/SimpleFragmentShader.fragmentshader");
+
+	// Change the background color
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	// End WEEK 02 ////////////////////////////////////////////////////////////////////////////////////////
+	
 	/* Loop until the user closes the window or presses ESC */
 	do {
 		/* Render Here */
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glVertexAttribPointer(
 			0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0
 		);
+
+		glUseProgram(programID);
 
 		// Draw the triangle!
 		glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0

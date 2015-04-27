@@ -2,19 +2,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "Application.h"
-#include "LoadShader.h"
+#include "Shader.h"
+#include "ShaderProgram.h"
 
 GLFWwindow* window = NULL;
 
-// An array of 3 vectors which represents 3 vertices
-static const GLfloat g_vertex_buffer_data[] = {
-	-1.0f, -1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f
-};
-
 // Initializes GLFW and the window to be the primary OpenGL context.
-// Returns: EXIT_WITH_ERROR if fails; EXIT_WITH_SUCCESS if succeeds.
+// Returns: EXIT_WITH_ERROR if fails; EXIT_WITH_SUCCESS if succeeds
+//			since InitWindowFailed && InitGlewFailed are being compared 
+//			bitwise in an if statement.
 int InitWindowFailed() {
 	/* Initialize the library */
 	if (glfwInit() == GLFW_FAIL) {
@@ -42,9 +38,6 @@ int InitWindowFailed() {
 	// Make context current
 	glfwMakeContextCurrent(window);
 
-	// Change the background color
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
 	// Ensure we can capture the escape key being pressed below.
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
@@ -65,30 +58,84 @@ int InitGlewFailed() {
 	}
 }
 
-void CreateVAO() {
-	GLuint VertexArrayID;																				
-	glGenVertexArrays(1, &VertexArrayID);																
-	glBindVertexArray(VertexArrayID);		
+// TODO: NEED TO MAKE A MORE FLEXIBLE VERSION W/ PARAMS.
+/************************************************************************
+Name:	CreateVao
+Params:	none
+Result: Sets up the VAO's for the scene.
+************************************************************************/
+GLuint uiVAO[2];
+void CreateVAO() {																			
+	glGenVertexArrays(2, uiVAO);
 }
 
-GLuint g_vertexBuffer;	// Global vertex buffer
+// TODO: NEED TO MAKE A MORE FLEXIBLE VERSION W/ PARAMS.
+/************************************************************************
+Name:	CreateVBO
+Params:	none.
+Result: Sets up the VBO's for the scene.
+************************************************************************/
+GLuint uiVBO[4];
 void CreateVBO() {																		
-	// Generate 1 buffer, put the resulting identifier in vertexBuffer									
-	glGenBuffers(1, &g_vertexBuffer);																		
-																										
-	// Bind the vertexBuffer...																			
-	glBindBuffer(GL_ARRAY_BUFFER, g_vertexBuffer);														
-																										
-	// Give vertices to OpenGL...																		
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);	
+	// Generate 4 buffers, put the resulting identifier in uiVBO									
+	glGenBuffers(4, uiVBO);
 }
 
-void Render(GLuint vbo, GLuint program) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	// 1st attribute buffer : vertices
+/************************************************************************
+Name:	InitScene
+Params:	none
+Result: Sets up the info needed for the OpenGL scene.
+************************************************************************/
+// An array of 3 vectors which represents 3 vertices
+static const GLfloat g_vertex_buffer_data[] = {
+	-1.0f, -1.0f, 0.0f,
+	1.0f, -1.0f, 0.0f,
+	0.0f, 1.0f, 0.0f
+};
+
+float fTriangle[9];		// Triangle verts
+float fQuad[12];		// Quad verts
+float fTriangleColor[9];
+float fQuadColor[12];	
+
+CShader shVertex, shFragment;
+CShaderProgram spMain;
+void InitScene() {
+	// Change the background color
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	// Setup triangle verts
+	fTriangle[0] = -0.4f; fTriangle[1] = 0.1f; fTriangle[2] = 0.0f;
+	fTriangle[3] = 0.4f;  fTriangle[4] = 0.1f; fTriangle[5] = 0.0f;
+	fTriangle[6] = 0.0f;  fTriangle[7] = 0.7f; fTriangle[8] = 0.0f;
+
+	// Setup triangle color
+	fTriangleColor[0] = 1.0f; fTriangleColor[1] = 0.0f; fTriangleColor[2] = 0.0f;
+	fTriangleColor[3] = 0.0f; fTriangleColor[4] = 1.0f; fTriangleColor[5] = 0.0f;
+	fTriangleColor[6] = 0.0f; fTriangleColor[7] = 0.0f; fTriangleColor[8] = 1.0f;
+
+	// Setup quad verts
+	fQuad[0] = -0.2f; fQuad[1] = -0.1f; fQuad[2] = 0.0f;
+	fQuad[3] = -0.2f; fQuad[4] = -0.6f; fQuad[5] = 0.0f;
+	fQuad[6] = 0.2f; fQuad[7] = -0.1f; fQuad[8] = 0.0f;
+	fQuad[9] = 0.2f; fQuad[10] = -0.6f; fQuad[11] = 0.0f;
+
+	// Setup quad color
+	fQuadColor[0] = 1.0f; fQuadColor[1] = 0.0f; fQuadColor[2] = 0.0f;
+	fQuadColor[3] = 0.0f; fQuadColor[4] = 1.0f; fQuadColor[8] = 0.0f;
+	fQuadColor[6] = 0.0f; fQuadColor[7] = 0.0f; fQuadColor[5] = 1.0f;
+	fQuadColor[9] = 1.0f; fQuadColor[10] = 1.0f; fQuadColor[11] = 0.0f;
+
+	// Generate two VAO's; one for the triangle and one for the quad.
+	CreateVAO();
+	// Generate 4 VBO's
+	CreateVBO();
+	// Setup whole triangle
+	glBindVertexArray(uiVAO[0]);	// VAO of tri
+	// Bind vert info
+	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[0]);
+	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), fTriangle, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(
 		0, 			// attribute 0. No particular reason for 0, but MUST match layout in shader.
 		3,			// size
@@ -96,14 +143,50 @@ void Render(GLuint vbo, GLuint program) {
 		GL_FALSE,	// normalized?
 		0,			// stride
 		(void*)0	// array buffer offset
-	);
-	
-	glUseProgram(program);
+		);
+	// Bind color info
+	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), fTriangleColor, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Setup whole quad
+	glBindVertexArray(uiVAO[1]);	// VAO of quad
+	// Bind vert info
+	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[2]);
+	glBufferData(GL_ARRAY_BUFFER, 12*sizeof(float), fQuad, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	// Bind color info
+	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[3]);
+	glBufferData(GL_ARRAY_BUFFER, 12*sizeof(float), fQuadColor, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Load shaders and create shader program.
+	shVertex.LoadShader("Shaders/SimpleVertexShader.vertexshader", GL_VERTEX_SHADER);
+	shFragment.LoadShader("Shaders/SimpleFragmentShader.fragmentshader", GL_FRAGMENT_SHADER);
+
+	spMain.CreateProgram();
+	spMain.AddShaderToProgram(&shVertex);
+	spMain.AddShaderToProgram(&shFragment);
+
+	spMain.LinkProgram();
+	spMain.UseProgram();
+
+	shVertex.DeleteShader();
+	shFragment.DeleteShader();
+}
+
+void Render() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	// Draw the triangle!
+	glBindVertexArray(uiVAO[0]);
 	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0
-	glDisableVertexAttribArray(0);
 	
+	glBindVertexArray(uiVAO[1]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0 ,4);
 	/* Swap front and back buffers */
 	glfwSwapBuffers(window);
 }
@@ -115,21 +198,15 @@ int main() {
 		return EXIT_WITH_ERROR;
 	}
 
-	// Create a Vertex Array Object; Set as current one...
-	CreateVAO();
-
-	// Create a Vertex Buffer Object; Set as current one...
-	CreateVBO();
-
-	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders("Shaders/SimpleVertexShader.vertexshader", "Shaders/SimpleFragmentShader.fragmentshader");
+	// Initialize all of the elements that are going to be used for drawing the scene.
+	InitScene();
 
 	/* MAIN GAME LOOP: Loop until the user closes the window or presses ESC */
 	do {
 		// Update phase; i.e. Update()...
 
 		// Render phase
-		Render(g_vertexBuffer, programID);
+		Render();
 
 		/* Poll for and process events */
 		glfwPollEvents();

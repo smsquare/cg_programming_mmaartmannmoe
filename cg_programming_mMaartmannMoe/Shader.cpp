@@ -26,8 +26,13 @@ bool CShader::LoadShader(const char* a_csFilePath, int a_iType) {
 	// Compile the shader
 	CompileShader(strShaderCode, a_csFilePath);
 	// Check the status of the shader
-	CheckShader();
-	return 1;
+	if (CheckShader() == false) {
+		return false;
+	}
+
+	this->m_iType = a_iType;
+	this->m_bLoaded = true;
+	return true;
 }
 
 /****************************************
@@ -79,14 +84,19 @@ Name:	CheckShader
 Params: None
 Result: Checks the status of the shader AFTER attempting to compile.
 		Logs any errors.
+		Returns true or false.
 ************************************************************************/
-void CShader::CheckShader() {
+bool CShader::CheckShader() {
 	glGetShaderiv(m_uiShader, GL_COMPILE_STATUS, &m_Result);
 	glGetShaderiv(m_uiShader, GL_INFO_LOG_LENGTH, &m_iInfoLogLength);
 	std::vector<char> vcShaderErrorMessage(m_iInfoLogLength);
 	glGetShaderInfoLog(m_uiShader, m_iInfoLogLength, NULL, &vcShaderErrorMessage[0]);
 	fprintf(stdout, "%s\n", &vcShaderErrorMessage[0]);
+
+	if (m_Result == GL_FALSE) return false;
+	return true;
 }
+
 /**********************************************
 Name:	IsLoaded
 Params:	None

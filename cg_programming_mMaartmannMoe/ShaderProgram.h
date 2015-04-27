@@ -18,8 +18,9 @@ class CShaderProgram {
 		void CreateProgram();
 		void DeleteProgram();
 
-		bool AddSherToProgram(CShader* a_pShader);
+		bool AddShaderToProgram(CShader* a_pShader);
 		bool LinkProgram();
+		void UseProgram();
 
 	private:
 		GLuint m_uiProgram;	// ID of Program

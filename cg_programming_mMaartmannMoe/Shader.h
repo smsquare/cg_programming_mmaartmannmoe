@@ -19,7 +19,7 @@ class CShader {
 		void DeleteShader();
 		std::string ReadShaderFromFile(const char* a_csFilePath);
 		void CompileShader(std::string a_strShaderCode, const char* a_csFilePath);
-		void CheckShader();
+		bool CheckShader();
 
 		bool IsLoaded();
 		GLuint GetShaderID();

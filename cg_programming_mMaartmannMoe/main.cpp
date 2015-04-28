@@ -118,13 +118,21 @@ mat4 RenderVertex(GLuint a_vertexBuffer, const vec3& a_position) {
 	return positionMatrix;
 }
 
-mat4 RenderQuad(GLuint a_vertexBuffer, const vec3& a_position) {
+mat4 RenderQuad(GLuint a_vertexBuffer, const vec3& a_position, const vec3& a_scale) {
+
+	mat4 scaleMatrix = mat4(
+		a_scale.x, 0, 0, 0,
+		0, a_scale.y, 0, 0,
+		0, 0, a_scale.z, 0,
+		0, 0, 0, 1
+	);
+
 	mat4 positionMatrix = RenderVertex(a_vertexBuffer, a_position);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(0);
 
-	return positionMatrix;
+	return positionMatrix * scaleMatrix;
 }
 
 float& GetDeltaTime() {
@@ -170,9 +178,22 @@ int main() {
 		float fDeltaTime = GetDeltaTime();
 		fprintf(stdout, "Delta Time: %f\n", fDeltaTime);
 
-		
 		spMain.UseProgram();
 		// Update phase; i.e. Update()...
+
+		// Initialize position data...
+		static vec3 ballPosition = vec3(0);
+		static vec3 ballVelocity = vec3(1.0f, 0.0f, 0.0f);
+		ballPosition += ballVelocity * fDeltaTime;
+
+		if (ballPosition.x > 1.4f) {
+			ballPosition.x = 1.4f;
+			ballVelocity.x = -ballVelocity.x;
+		}
+		else if (ballPosition.x < -1.4f) {
+			ballPosition.x = -1.4f;
+			ballVelocity.x = -ballVelocity.x;
+		}
 
 		// Camera
 		vec3 cameraPos = vec3(0,0,3);
@@ -184,10 +205,16 @@ int main() {
 			upVector		// Head is up (set to 0,-1,0 to look upside down)
 		);
 
-		// Render the quad
-		mat4 MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(0));
+		// Render the ball...
+		mat4 MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, ballPosition, vec3(0.05f));
 		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
-			
+		// Render the paddle
+		MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(-1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));
+		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+		// Render the paddle
+		MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));
+		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+		
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 		/* Poll for and process events */

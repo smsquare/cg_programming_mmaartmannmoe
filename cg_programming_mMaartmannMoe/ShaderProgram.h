@@ -22,6 +22,8 @@ class CShaderProgram {
 		bool LinkProgram();
 		void UseProgram();
 
+		GLuint GetProgramID();
+
 	private:
 		GLuint m_uiProgram;	// ID of Program
 		bool m_bLinked;		// Whether program is linked and ready to use. 

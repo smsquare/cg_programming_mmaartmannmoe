@@ -15,7 +15,9 @@
 // ALWAYS include glew.h BEFORE bl.h AND glfw3.h
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+// GLM provides OpenGL mathematics
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // Namespaces...
 using namespace std;
@@ -31,6 +33,11 @@ using namespace glm;
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 #define GLFW_FAIL 0
+
+// Camera defines
+#define FIELD_OF_VIEW 45.0f
+#define Z_NEAR 0.1f
+#define Z_FAR 100.0f
 
 // External Globals...
 extern GLFWwindow* window;

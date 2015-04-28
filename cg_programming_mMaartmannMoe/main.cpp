@@ -58,111 +58,9 @@ int InitGlewFailed() {
 	}
 }
 
-// TODO: NEED TO MAKE A MORE FLEXIBLE VERSION W/ PARAMS.
-/************************************************************************
-Name:	CreateVao
-Params:	none
-Result: Sets up the VAO's for the scene.
-************************************************************************/
-GLuint uiVAO[2];
-void CreateVAO() {																			
-	glGenVertexArrays(2, uiVAO);
-}
-
-// TODO: NEED TO MAKE A MORE FLEXIBLE VERSION W/ PARAMS.
-/************************************************************************
-Name:	CreateVBO
-Params:	none.
-Result: Sets up the VBO's for the scene.
-************************************************************************/
-GLuint uiVBO[4];
-void CreateVBO() {																		
-	// Generate 4 buffers, put the resulting identifier in uiVBO									
-	glGenBuffers(4, uiVBO);
-}
-
-/************************************************************************
-Name:	InitScene
-Params:	none
-Result: Sets up the info needed for the OpenGL scene.
-************************************************************************/
-// An array of 3 vectors which represents 3 vertices
-static const GLfloat g_vertex_buffer_data[] = {
-	-1.0f, -1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	0.0f, 1.0f, 0.0f
-};
-
-float fTriangle[9];		// Triangle verts
-float fQuad[12];		// Quad verts
-float fTriangleColor[9];
-float fQuadColor[12];	
-
 CShader shVertex, shFragment;
 CShaderProgram spMain;
-void InitScene() {
-	// Change the background color
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	// Setup triangle verts
-	fTriangle[0] = -0.4f; fTriangle[1] = 0.1f; fTriangle[2] = 0.0f;
-	fTriangle[3] = 0.4f;  fTriangle[4] = 0.1f; fTriangle[5] = 0.0f;
-	fTriangle[6] = 0.0f;  fTriangle[7] = 0.7f; fTriangle[8] = 0.0f;
-
-	// Setup triangle color
-	fTriangleColor[0] = 1.0f; fTriangleColor[1] = 0.0f; fTriangleColor[2] = 0.0f;
-	fTriangleColor[3] = 0.0f; fTriangleColor[4] = 1.0f; fTriangleColor[5] = 0.0f;
-	fTriangleColor[6] = 0.0f; fTriangleColor[7] = 0.0f; fTriangleColor[8] = 1.0f;
-
-	// Setup quad verts
-	fQuad[0] = -0.2f; fQuad[1] = -0.1f; fQuad[2] = 0.0f;
-	fQuad[3] = -0.2f; fQuad[4] = -0.6f; fQuad[5] = 0.0f;
-	fQuad[6] = 0.2f; fQuad[7] = -0.1f; fQuad[8] = 0.0f;
-	fQuad[9] = 0.2f; fQuad[10] = -0.6f; fQuad[11] = 0.0f;
-
-	// Setup quad color
-	fQuadColor[0] = 1.0f; fQuadColor[1] = 0.0f; fQuadColor[2] = 0.0f;
-	fQuadColor[3] = 0.0f; fQuadColor[4] = 1.0f; fQuadColor[8] = 0.0f;
-	fQuadColor[6] = 0.0f; fQuadColor[7] = 0.1f; fQuadColor[5] = 1.0f;
-	fQuadColor[9] = 1.0f; fQuadColor[10] = 1.0f; fQuadColor[11] = 0.4f;
-
-	// Generate two VAO's; one for the triangle and one for the quad.
-	CreateVAO();
-	// Generate 4 VBO's
-	CreateVBO();
-	// Setup whole triangle
-	glBindVertexArray(uiVAO[0]);	// VAO of tri
-	// Bind vert info
-	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[0]);
-	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), fTriangle, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(
-		0, 			// attribute 0. No particular reason for 0, but MUST match layout in shader.
-		3,			// size
-		GL_FLOAT, 	// type
-		GL_FALSE,	// normalized?
-		0,			// stride
-		(void*)0	// array buffer offset
-		);
-	// Bind color info
-	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[1]);
-	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), fTriangleColor, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Setup whole quad
-	glBindVertexArray(uiVAO[1]);	// VAO of quad
-	// Bind vert info
-	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[2]);
-	glBufferData(GL_ARRAY_BUFFER, 12*sizeof(float), fQuad, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	// Bind color info
-	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[3]);
-	glBufferData(GL_ARRAY_BUFFER, 12*sizeof(float), fQuadColor, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
+void LoadShaders() {
 	// Load shaders and create shader program.
 	shVertex.LoadShader("Shaders/SimpleVertexShader.vertexshader", GL_VERTEX_SHADER);
 	shFragment.LoadShader("Shaders/SimpleFragmentShader.fragmentshader", GL_FRAGMENT_SHADER);
@@ -172,23 +70,71 @@ void InitScene() {
 	spMain.AddShaderToProgram(&shFragment);
 
 	spMain.LinkProgram();
-	spMain.UseProgram();
+
 
 	shVertex.DeleteShader();
 	shFragment.DeleteShader();
 }
 
-void Render() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+GLuint& LoadQuad() {
+	static GLfloat g_vertex_buffer_data[] = {
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
+	};
+
+	// Center square
+	for (int i = 0, size = 18; i < size; ++i) {
+		g_vertex_buffer_data[i] -= 0.5f;
+	}
+
+	GLuint vertexBuffer = 0;
+
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 	
-	// Draw the triangle!
-	glBindVertexArray(uiVAO[0]);
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0
-	
-	glBindVertexArray(uiVAO[1]);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0 ,4);
-	/* Swap front and back buffers */
-	glfwSwapBuffers(window);
+	return vertexBuffer;
+}
+
+mat4 RenderVertex(GLuint a_vertexBuffer, const vec3& a_position) {
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, a_vertexBuffer);
+
+	glVertexAttribPointer(
+		0,			//attribute layout
+		3,			//Elements in array
+		GL_FLOAT,	//Each element is of type float
+		GL_FALSE,	//Normalized?
+		0,			//Stride...
+		(void*)0	//Array buffer offset...
+	);
+
+	mat4 identityMatrix = mat4(1.0f);
+	mat4 positionMatrix = translate(identityMatrix, a_position);
+	return positionMatrix;
+}
+
+mat4 RenderQuad(GLuint a_vertexBuffer, const vec3& a_position) {
+	mat4 positionMatrix = RenderVertex(a_vertexBuffer, a_position);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisableVertexAttribArray(0);
+
+	return positionMatrix;
+}
+
+float& GetDeltaTime() {
+	static float fLastTime = glfwGetTime();
+
+	float fNow = glfwGetTime();
+	float fDeltaTime = fNow - fLastTime;
+
+	fLastTime = fNow;
+	return fDeltaTime;
 }
 
 int main() {
@@ -198,16 +144,52 @@ int main() {
 		return EXIT_WITH_ERROR;
 	}
 
-	// Initialize all of the elements that are going to be used for drawing the scene.
-	InitScene();
+	GLuint vertexArrayID = 0;
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
+
+	// Create and compile GLSL program from shaders...
+	LoadShaders();
+
+	// Get variable from shader
+	GLuint MVPMatrixID = glGetUniformLocation(spMain.GetProgramID(), "MVP");
+
+	// Setup camera
+	float aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+	mat4 projectionMatrix = perspective(FIELD_OF_VIEW, aspectRatio, Z_NEAR, Z_FAR);
+
+	// Load quad info
+
+	GLuint quadID = LoadQuad();
 
 	/* MAIN GAME LOOP: Loop until the user closes the window or presses ESC */
 	do {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Get delta time...
+		float fDeltaTime = GetDeltaTime();
+		fprintf(stdout, "Delta Time: %f\n", fDeltaTime);
+
+		
+		spMain.UseProgram();
 		// Update phase; i.e. Update()...
 
-		// Render phase
-		Render();
+		// Camera
+		vec3 cameraPos = vec3(0,0,3);
+		vec3 worldOrigin = vec3(0,0,0);
+		vec3 upVector = vec3(0,1,0);
+		mat4 viewMatrix = lookAt(
+			cameraPos,		// Camera is at (0,0,3) in world space
+			worldOrigin,	// and looks at the origin
+			upVector		// Head is up (set to 0,-1,0 to look upside down)
+		);
 
+		// Render the quad
+		mat4 MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(0));
+		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+			
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
 		/* Poll for and process events */
 		glfwPollEvents();
 	} while ( // Check if the ESC key was pressed OR the window was closed...

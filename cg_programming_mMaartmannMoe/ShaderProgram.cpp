@@ -60,3 +60,12 @@ Result: If linked, use the program.
 void CShaderProgram::UseProgram() {
 	if (m_bLinked) glUseProgram(m_uiProgram);
 }
+
+/*************************************************
+Name:	GetProgramID
+Params:	none
+Result: Returns the program ID.
+*************************************************/
+GLuint CShaderProgram::GetProgramID() {
+	return this->m_uiProgram;
+}

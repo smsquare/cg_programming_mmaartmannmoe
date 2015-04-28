@@ -102,7 +102,7 @@ CShader shVertex, shFragment;
 CShaderProgram spMain;
 void InitScene() {
 	// Change the background color
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Setup triangle verts
 	fTriangle[0] = -0.4f; fTriangle[1] = 0.1f; fTriangle[2] = 0.0f;
@@ -123,8 +123,8 @@ void InitScene() {
 	// Setup quad color
 	fQuadColor[0] = 1.0f; fQuadColor[1] = 0.0f; fQuadColor[2] = 0.0f;
 	fQuadColor[3] = 0.0f; fQuadColor[4] = 1.0f; fQuadColor[8] = 0.0f;
-	fQuadColor[6] = 0.0f; fQuadColor[7] = 0.0f; fQuadColor[5] = 1.0f;
-	fQuadColor[9] = 1.0f; fQuadColor[10] = 1.0f; fQuadColor[11] = 0.0f;
+	fQuadColor[6] = 0.0f; fQuadColor[7] = 0.1f; fQuadColor[5] = 1.0f;
+	fQuadColor[9] = 1.0f; fQuadColor[10] = 1.0f; fQuadColor[11] = 0.4f;
 
 	// Generate two VAO's; one for the triangle and one for the quad.
 	CreateVAO();

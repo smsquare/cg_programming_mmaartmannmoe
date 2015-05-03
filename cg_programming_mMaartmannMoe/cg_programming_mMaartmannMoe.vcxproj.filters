@@ -33,6 +33,18 @@
     <ClCompile Include="APP.Initialize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="APP.Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.LoadScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -48,6 +60,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="APP.Initialize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="APP.Ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.LoadScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

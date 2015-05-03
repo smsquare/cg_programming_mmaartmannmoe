@@ -1,7 +1,7 @@
 // APP.Initialize.cpp
 //////////////////////////////////////////////////////////////////////////
-#include "Application.h"
 
+#include "APP.Initialize.h"
 // Initializes GLFW and the window to be the primary OpenGL context.
 // Returns: EXIT_WITH_ERROR if fails; EXIT_WITH_SUCCESS if succeeds
 //			since InitWindowFailed && InitGlewFailed are being compared 

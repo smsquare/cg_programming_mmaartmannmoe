@@ -76,17 +76,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="APP.Ball.cpp" />
     <ClCompile Include="APP.Initialize.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="System.Camera.cpp" />
+    <ClCompile Include="System.LoadScene.cpp" />
+    <ClCompile Include="System.Render.cpp" />
     <ClCompile Include="System.Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="APP.Ball.h" />
     <ClInclude Include="APP.Initialize.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="System.Camera.h" />
+    <ClInclude Include="System.LoadScene.h" />
+    <ClInclude Include="System.Render.h" />
     <ClInclude Include="System.Utility.h" />
   </ItemGroup>
   <ItemGroup>

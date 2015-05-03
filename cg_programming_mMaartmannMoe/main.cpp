@@ -2,64 +2,16 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "Application.h"
+#include "APP.Initialize.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "System.Utility.h"
 
 GLFWwindow* window = NULL;
 
-// Initializes GLFW and the window to be the primary OpenGL context.
-// Returns: EXIT_WITH_ERROR if fails; EXIT_WITH_SUCCESS if succeeds
-//			since InitWindowFailed && InitGlewFailed are being compared 
-//			bitwise in an if statement.
-int InitWindowFailed() {
-	/* Initialize the library */
-	if (glfwInit() == GLFW_FAIL) {
-		fprintf( stderr, "Failed to initialize GLFW\n");
-		return EXIT_WITH_ERROR;
-	}
-	fprintf(stdout, "Initialized GLFW...\n");
-	
-	// Define some properties of the window being created...
-	glfwWindowHint(GLFW_SAMPLES, 4);								// 4x anti-aliasing - AA
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);					// Want OpenGL 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);			// Make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);	// We don't want the old OpenGL
-	
-	/* Create a windowed mode window and its OpenGL context */
-	
-	window = glfwCreateWindow(1024, 768, "Main Window", NULL, NULL);
-	if (window == NULL) {
-		fprintf(stderr, "ERROR: Failed to open GLFW window.\n");
-		glfwTerminate();
-		return EXIT_WITH_ERROR;
-	} 
-
-	// Make context current
-	glfwMakeContextCurrent(window);
-
-	// Ensure we can capture the escape key being pressed below.
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-	fprintf(stdout, "Created window...\n");
-	
-	return EXIT_WITH_SUCCESS;
-}
-
-int InitGlewFailed() {
-	glewExperimental = true; // Needed in core profile...
-	GLenum err = glewInit();
-	if (err != GLEW_OK) {
-		fprintf(stderr, "ERROR %s: Failed to initialize GLEW.\n", glewGetErrorString(err));
-		return EXIT_WITH_ERROR;
-	} else {
-		fprintf(stdout, "Initialized GLEW...\n");
-		return EXIT_WITH_SUCCESS;
-	}
-}
-
 CShader shVertex, shFragment;
 CShaderProgram spMain;
+
 void LoadShaders() {
 	// Load shaders and create shader program.
 	shVertex.LoadShader("Shaders/SimpleVertexShader.vertexshader", GL_VERTEX_SHADER);
@@ -135,14 +87,9 @@ mat4 RenderQuad(GLuint a_vertexBuffer, const vec3& a_position, const vec3& a_sca
 	return positionMatrix * scaleMatrix;
 }
 
-float& GetDeltaTime() {
-	static float fLastTime = glfwGetTime();
-
-	float fNow = glfwGetTime();
-	float fDeltaTime = fNow - fLastTime;
-
-	fLastTime = fNow;
-	return fDeltaTime;
+void DrawBall(const GLuint& a_quadID, const vec3& a_position, const mat4& a_projectionMatrix, const mat4& a_viewMatrix, const GLuint& a_MVPMatrixID) {
+	mat4 MVPMatrix = a_projectionMatrix * a_viewMatrix * RenderQuad(a_quadID, a_position, vec3(0.05f));
+	glUniformMatrix4fv(a_MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
 }
 
 int main() {
@@ -167,7 +114,6 @@ int main() {
 	mat4 projectionMatrix = perspective(FIELD_OF_VIEW, aspectRatio, Z_NEAR, Z_FAR);
 
 	// Load quad info
-
 	GLuint quadID = LoadQuad();
 
 	/* MAIN GAME LOOP: Loop until the user closes the window or presses ESC */
@@ -176,8 +122,9 @@ int main() {
 
 		// Get delta time...
 		float fDeltaTime = GetDeltaTime();
-		fprintf(stdout, "Delta Time: %f\n", fDeltaTime);
-
+		#ifdef _DEBUG
+			fprintf(stdout, "Delta Time: %f\n", fDeltaTime);
+		#endif	
 		spMain.UseProgram();
 		// Update phase; i.e. Update()...
 
@@ -205,11 +152,14 @@ int main() {
 			upVector		// Head is up (set to 0,-1,0 to look upside down)
 		);
 
+		
 		// Render the ball...
-		mat4 MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, ballPosition, vec3(0.05f));
-		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+		//mat4 MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, ballPosition, vec3(0.05f));
+		//glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+		DrawBall(quadID, ballPosition, projectionMatrix, viewMatrix, MVPMatrixID);
+
 		// Render the paddle
-		MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(-1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));
+		mat4 MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(-1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));
 		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
 		// Render the paddle
 		MVPMatrix = projectionMatrix * viewMatrix * RenderQuad(quadID, vec3(1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));

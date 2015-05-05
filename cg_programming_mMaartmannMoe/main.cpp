@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "APP.Initialize.h"
 #include "APP.Ball.h"
+#include "APP.Paddle.h"
 #include "System.LoadScene.h"
 #include "System.Camera.h"
 #include "System.Utility.h"
@@ -20,10 +21,23 @@ int main() {
 	LoadScene();
 
 	// Setup Ball
-	Ball* ball = new Ball();
+	CBall* ball = new CBall();
 	ball->SetQuadID(quadID);
-	ball->SetPosition(vec3(0));
-	ball->SetVelocity(vec3(1.0f, 0.0f, 0.0f));
+	ball->SetPosition(vec3(0.0f, 0.0f, 0.0f));
+	ball->SetVelocity(vec3(0.9f, 0.005f, 0.0f));
+
+	// Setup Left Paddle
+	CPaddle* paddleLeft = new CPaddle();
+	paddleLeft->SetQuadID(quadID);
+	paddleLeft->SetPosition(vec3(-1.5f,0.0f,0.0f));
+	paddleLeft->SetKeyUp(GLFW_KEY_W);
+	paddleLeft->SetKeyDown(GLFW_KEY_S);
+
+	CPaddle* paddleRight = new CPaddle();
+	paddleRight->SetQuadID(quadID);
+	paddleRight->SetPosition(vec3(1.5f,0.0f,0.0f));
+	paddleRight->SetKeyUp(GLFW_KEY_UP);
+	paddleRight->SetKeyDown(GLFW_KEY_DOWN);
 
 	/* MAIN GAME LOOP: Loop until the user closes the window or presses ESC */
 	do {
@@ -36,16 +50,13 @@ int main() {
 		#endif	
 
 		// Update phase; i.e. Update()...
-		ball->Update(fDeltaTime);
-
+		paddleLeft->Update(fDeltaTime);
+		paddleRight->Update(fDeltaTime);
+		ball->Update(fDeltaTime, paddleLeft, paddleRight);
 		// Draw phase:
 		ball->Draw(camMain);
-		// Render the paddle
-		mat4 MVPMatrix = camMain->GetProjectionMatrix() * camMain->GetViewMatrix() * RenderQuad(quadID, vec3(-1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));
-		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
-		// Render the paddle
-		MVPMatrix = camMain->GetProjectionMatrix() * camMain->GetViewMatrix() * RenderQuad(quadID, vec3(1.0f,0.0f,0.0f), vec3(0.05f, 0.7f,0.0f));
-		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+		paddleLeft->Draw(camMain);
+		paddleRight->Draw(camMain);
 		
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

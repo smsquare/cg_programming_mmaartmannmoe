@@ -3,7 +3,6 @@
 
 #include "System.LoadScene.h"
 
-
 CShader shVertex;
 CShader shFragment;
 CShaderProgram spMain;

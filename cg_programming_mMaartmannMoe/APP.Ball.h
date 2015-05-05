@@ -5,14 +5,15 @@
 #include "Application.h"
 #include "System.Camera.h"
 #include "System.Render.h"
+#include "System.Mesh.h"
+#include "APP.Paddle.h"
 
-
-void DrawBall(const GLuint& a_quadID, const vec3& a_position, const mat4& a_projectionMatrix, const mat4& a_viewMatrix, const GLuint& a_MVPMatrixID);
-
-class Ball {
+class CBall {
 public:
-	Ball();
+	CBall();
 
+	CMesh mesh;
+	enum class PADDLEHIT { NOTHING, TOP, BOTTOM, LEFT, RIGHT};
 	/*** GET ***/
 	GLuint GetQuadID();
 	vec3 GetPosition();
@@ -25,9 +26,13 @@ public:
 
 	/*** Utility ***/
 	void Draw(Camera* a_activeCamera);
-	void Update(float a_deltaTime);
+	void Update(float a_deltaTime, CPaddle* leftPaddle, CPaddle* rightPaddle);
+	void BuildBall();
+	int IsHittingWhatSide(CPaddle* paddle);
+	int IsBallHittingPaddle(CPaddle* paddle);
 private:
 	GLuint* m_quadID;
 	vec3* m_position;
 	vec3* m_velocity;
+	vec3* m_scale;
 };

@@ -24,7 +24,7 @@ int main() {
 	CBall* ball = new CBall();
 	ball->SetQuadID(quadID);
 	ball->SetPosition(vec3(0.0f, 0.0f, 0.0f));
-	ball->SetVelocity(vec3(0.9f, 0.005f, 0.0f));
+	ball->SetVelocity(vec3(0.79f, 0.07f, 0.0f));
 
 	// Setup Left Paddle
 	CPaddle* paddleLeft = new CPaddle();
@@ -53,6 +53,7 @@ int main() {
 		paddleLeft->Update(fDeltaTime);
 		paddleRight->Update(fDeltaTime);
 		ball->Update(fDeltaTime, paddleLeft, paddleRight);
+
 		// Draw phase:
 		ball->Draw(camMain);
 		paddleLeft->Draw(camMain);

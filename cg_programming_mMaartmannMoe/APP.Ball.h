@@ -5,14 +5,12 @@
 #include "Application.h"
 #include "System.Camera.h"
 #include "System.Render.h"
-#include "System.Mesh.h"
 #include "APP.Paddle.h"
 
 class CBall {
 public:
 	CBall();
 
-	CMesh mesh;
 	enum class PADDLEHIT { NOTHING, TOP, BOTTOM, LEFT, RIGHT};
 	/*** GET ***/
 	GLuint GetQuadID();

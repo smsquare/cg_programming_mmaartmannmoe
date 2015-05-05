@@ -195,21 +195,21 @@ int CBall::IsBallHittingPaddle(CPaddle* paddle) {
 }
 
 void CBall::BuildBall() {
-	GLfloat g_vertex_buffer_data[] = {
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
-	};
+	//GLfloat g_vertex_buffer_data[] = {
+	//	0.0f, 0.0f, 0.0f,
+	//	1.0f, 0.0f, 0.0f,
+	//	1.0f, 1.0f, 0.0f,
+	//	0.0f, 0.0f, 0.0f,
+	//	1.0f, 1.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f
+	//};
 
-	// Center square
-	for (int i = 0, size = 18; i < size; ++i) {
-		g_vertex_buffer_data[i] -= 0.5f;
-	}
-	for (int n = 0; n < 18;n += 3) {
-		CVertex* v = new CVertex(g_vertex_buffer_data[n+0], g_vertex_buffer_data[n+1], g_vertex_buffer_data[n+2]);
-		this->mesh.AddVertex(*v);
-	}
+	//// Center square
+	//for (int i = 0, size = 18; i < size; ++i) {
+	//	g_vertex_buffer_data[i] -= 0.5f;
+	//}
+	//for (int n = 0; n < 18;n += 3) {
+	//	CVertex* v = new CVertex(g_vertex_buffer_data[n+0], g_vertex_buffer_data[n+1], g_vertex_buffer_data[n+2]);
+	//	this->mesh.AddVertex(*v);
+	//}
 }

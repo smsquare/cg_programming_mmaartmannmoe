@@ -1,8 +1,17 @@
-// APP.Initialize.cpp
+// System.Transform.h
 //////////////////////////////////////////////////////////////////////////
 #pragma once
 
 #include "Application.h"
 
-int InitWindowFailed();
-int InitGlewFailed();
+class CTransform {
+public:
+	CTransform();
+	~CTransform();
+	
+	float x, y ,z;
+
+private:
+
+};
+

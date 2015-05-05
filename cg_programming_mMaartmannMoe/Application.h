@@ -39,6 +39,8 @@ using namespace glm;
 #define Z_NEAR 0.1f
 #define Z_FAR 100.0f
 
+#define _DEBUG
+
 // External Globals...
 extern GLFWwindow* window;
 extern GLint shaderStatus;

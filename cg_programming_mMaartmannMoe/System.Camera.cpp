@@ -10,6 +10,7 @@ Camera::Camera () {
 	this->m_worldOrigin = new vec3(0, 0, 0);	// Initialize to 0, 0, 0
 	this->m_upVector = new vec3(0, 1, 0);		// Initialize to 0, 1, 0
 	this->m_viewMatrix = new mat4();
+	this->MVPMatrixID = NULL;
 }
 
 Camera::~Camera ()

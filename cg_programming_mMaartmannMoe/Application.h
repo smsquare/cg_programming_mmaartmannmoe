@@ -39,6 +39,7 @@ using namespace glm;
 #define Z_NEAR 0.1f
 #define Z_FAR 100.0f
 
+// Turn of when debugging to print out errors
 #define _DEBUG
 
 // External Globals...

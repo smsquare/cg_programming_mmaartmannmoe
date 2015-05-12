@@ -19,6 +19,8 @@ public:
 	mat4 GetProjectionMatrix();
 	mat4 GetViewMatrix();
 
+	GLuint MVPMatrixID;
+
 private:
 	float* m_aspectRatio;
 	mat4* m_projectionMatrix;

@@ -67,7 +67,7 @@ void LoadScene() {
 	camMain->SetProjectionMatrix(FIELD_OF_VIEW, camMain->GetAspectRaio(), Z_NEAR, Z_FAR);
 	camMain->SetPosition(vec3(0, 0, 3));
 	camMain->SetViewMatrix();
-
+	camMain->MVPMatrixID = glGetUniformLocation(spMain.GetProgramID(), "MVP");
 	// Load quad info
 	quadID = LoadQuad();
 }

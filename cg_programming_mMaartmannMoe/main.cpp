@@ -8,6 +8,9 @@
 #include "System.LoadScene.h"
 #include "System.Camera.h"
 #include "System.Utility.h"
+#include "APP.TestObject.h"
+#include "APP.Plane.h"
+#include "APP.World.h"
 
 GLFWwindow* window = NULL;
 
@@ -20,24 +23,12 @@ int main() {
 	
 	LoadScene();
 
-	// Setup Ball
-	CBall* ball = new CBall();
-	ball->SetQuadID(quadID);
-	ball->SetPosition(vec3(0.0f, 0.0f, 0.0f));
-	ball->SetVelocity(vec3(0.79f, 0.07f, 0.0f));
+	World* world = new World();
 
-	// Setup Left Paddle
-	CPaddle* paddleLeft = new CPaddle();
-	paddleLeft->SetQuadID(quadID);
-	paddleLeft->SetPosition(vec3(-1.5f,0.0f,0.0f));
-	paddleLeft->SetKeyUp(GLFW_KEY_W);
-	paddleLeft->SetKeyDown(GLFW_KEY_S);
-
-	CPaddle* paddleRight = new CPaddle();
-	paddleRight->SetQuadID(quadID);
-	paddleRight->SetPosition(vec3(1.5f,0.0f,0.0f));
-	paddleRight->SetKeyUp(GLFW_KEY_UP);
-	paddleRight->SetKeyDown(GLFW_KEY_DOWN);
+	//HACK: POLYGON MODE
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	// Turn off wireframe mode
+	//glPolygonMode(GL_FRONT, GL_FILL);
 
 	/* MAIN GAME LOOP: Loop until the user closes the window or presses ESC */
 	do {
@@ -45,24 +36,18 @@ int main() {
 
 		// Get delta time...
 		float fDeltaTime = GetDeltaTime();
-		#ifdef _DEBUG
-			//fprintf(stdout, "Delta Time: %f\n", fDeltaTime);
-		#endif	
+
 
 		// Update phase; i.e. Update()...
-		paddleLeft->Update(fDeltaTime);
-		paddleRight->Update(fDeltaTime);
-		ball->Update(fDeltaTime, paddleLeft, paddleRight);
-
+		//TODO: ADD World Update function
 		// Draw phase:
-		ball->Draw(camMain);
-		paddleLeft->Draw(camMain);
-		paddleRight->Draw(camMain);
-		
+		world->Render(camMain);
+
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 		/* Poll for and process events */
 		glfwPollEvents();
+
 	} while ( // Check if the ESC key was pressed OR the window was closed...
 		glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(window) == 0

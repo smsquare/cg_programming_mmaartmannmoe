@@ -22,7 +22,7 @@ class Object {
 		float GetTopY();
 		float GetBottomY();
 		GLuint LoadBMP(const char* a_imagePath);
-		void LoadTriangles(const GLuint& a_numRows, const GLuint& a_numColoumns, const GLenum& a_renderMode);
+		void LoadTriangles(const GLuint& a_numColoumns, const GLuint& a_numRows, const GLenum& a_renderMode);
 	protected:
 		vec3 position, scale;
 	private:

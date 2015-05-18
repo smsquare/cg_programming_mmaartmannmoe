@@ -2,13 +2,14 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "System.Object.h"
+#include "System.Mesh.h"
 
 Object::Object() {
 	m_renderMode = GL_TRIANGLES;
 	m_vertexBufferID = 0;
 	SetPosition(vec3(0));
 	SetScale(vec3(1));
-	m_numIndices = 6;
+	m_numIndices = 0;
 }
 
 Object::~Object() {
@@ -54,31 +55,21 @@ GLuint Object::LoadBMP(const char* a_imagePath) {
 
 } */
 
-void Object::LoadTriangles(const GLuint& a_numRows, const GLuint& a_numColumns, const GLenum& a_renderMode) { 
-
-	//TODO: ADD flexibilty to vertexBuffer; Generate based on num row/col
-	static const GLfloat vertexBuffer[] = {
-
-		0.0f, 1.0f, 0.0f,	// Maps to index 0
-		0.0f, 0.0f, 0.0f,	// Maps to index 1
-		1.0f, 1.0f, 0.0f,	// Maps to index 2
-		1.0f, 0.0f, 0.0f,	// Maps to index 3
-		
-		1.0f, 0.0f, 0.0f,	// Maps to index 4
-		0.0f, 0.0f, 0.0f,	// Maps to index 5
-
-		0.0f, 0.0f, 0.0f,	// Maps to index 6
-		0.0f, -1.0f, 0.0f,	// Maps to index 7
-		1.0f, 0.0f, 0.0f,	// Maps to index 8
-		1.0f, -1.0f, 0.0f	// Maps to index 9
-	};
+void Object::LoadTriangles(const GLuint& a_numColoumns, const GLuint& a_numRows, const GLenum& a_renderMode) { 
+	vec3* vertexBuffer = CMesh::BuildMesh(a_numColoumns, a_numRows);
 	
-	m_numIndices = 10;
+	this->m_numIndices = ((((2*a_numColoumns) + 3) * a_numRows) + (a_numRows-1));
+	fprintf(stdout, "x,y: %u, %u\n", a_numColoumns, a_numRows);
+	fprintf(stdout, "test numIndices form: %u\n", m_numIndices);
+
+	for (int i = 0; i < m_numIndices; i++) {
+		fprintf(stdout, "index[%d]: %f, %f, %f\n", i, vertexBuffer[i].x, vertexBuffer[i].y, vertexBuffer[i].z);
+	}
 
 	this->m_renderMode = a_renderMode;
 	glGenBuffers(1, &m_vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * m_numIndices, vertexBuffer, GL_STATIC_DRAW);
 }
 
 void Object::Update(const float& a_deltaTime) {

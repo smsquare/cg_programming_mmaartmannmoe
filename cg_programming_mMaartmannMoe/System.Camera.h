@@ -13,11 +13,14 @@ public:
 	void SetProjectionMatrix(float a_fov, float a_aspectRatio, float a_near, float a_far);
 	void SetPosition(vec3 a_position);
 	void SetViewMatrix();	// Explict declaration
-	//void SetViewMatrix(vec3 a_cameraPos, vec3 a_worldOrigin, vec3 a_upVector);
+	void SetViewMatrix(vec3 a_cameraPos, vec3 a_worldOrigin, vec3 a_upVector);
+	void SetWorldOrigin(vec3 a_worldOrigin);
 
 	float GetAspectRaio();
 	mat4 GetProjectionMatrix();
+	vec3 GetPosition();
 	mat4 GetViewMatrix();
+	vec3 GetWorldOrigin();
 
 	GLuint MVPMatrixID;
 

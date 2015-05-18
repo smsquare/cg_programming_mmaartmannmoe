@@ -51,6 +51,14 @@ void Camera::SetViewMatrix() {
 	);
 }
 
+void Camera::SetViewMatrix(vec3 a_cameraPos, vec3 a_worldOrigin, vec3 a_upVector) {
+	*this->m_viewMatrix = lookAt(
+		*this->m_position = a_cameraPos,
+		*this->m_worldOrigin = a_worldOrigin,
+		*this->m_upVector = a_upVector
+	);
+}
+
 float Camera::GetAspectRaio() {
 	return *this->m_aspectRatio;
 }
@@ -58,7 +66,12 @@ float Camera::GetAspectRaio() {
 mat4 Camera::GetProjectionMatrix() {
 	return *this->m_projectionMatrix;
 }
-
+vec3 Camera::GetPosition() {
+	return *this->m_position;
+}
 mat4 Camera::GetViewMatrix() {
 	return *this->m_viewMatrix;
+}
+vec3 Camera::GetWorldOrigin() {
+	return *this->m_worldOrigin;
 }

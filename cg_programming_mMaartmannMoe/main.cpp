@@ -29,7 +29,6 @@ int main() {
 	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 	// Turn off wireframe mode
 	//glPolygonMode(GL_FRONT, GL_FILL);
-
 	/* MAIN GAME LOOP: Loop until the user closes the window or presses ESC */
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -39,7 +38,8 @@ int main() {
 
 
 		// Update phase; i.e. Update()...
-		//TODO: ADD World Update function
+		world->Update(camMain);
+
 		// Draw phase:
 		world->Render(camMain);
 

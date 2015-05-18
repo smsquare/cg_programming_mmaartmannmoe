@@ -65,7 +65,7 @@ void LoadScene() {
 	// Setup main camera
 	camMain->SetAspectRatio(SCREEN_WIDTH, SCREEN_HEIGHT);
 	camMain->SetProjectionMatrix(FIELD_OF_VIEW, camMain->GetAspectRaio(), Z_NEAR, Z_FAR);
-	camMain->SetPosition(vec3(0, 0, 3));
+	camMain->SetPosition(vec3(0, 0, 20));
 	camMain->SetViewMatrix();
 	camMain->MVPMatrixID = glGetUniformLocation(spMain.GetProgramID(), "MVP");
 	// Load quad info

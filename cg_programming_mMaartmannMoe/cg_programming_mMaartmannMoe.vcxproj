@@ -87,6 +87,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="System.Camera.cpp" />
     <ClCompile Include="System.LoadScene.cpp" />
+    <ClCompile Include="System.Mesh.cpp" />
     <ClCompile Include="System.Object.cpp" />
     <ClCompile Include="System.Render.cpp" />
     <ClCompile Include="System.Transform.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="System.Camera.h" />
     <ClInclude Include="System.LoadScene.h" />
+    <ClInclude Include="System.Mesh.h" />
     <ClInclude Include="System.Object.h" />
     <ClInclude Include="System.Render.h" />
     <ClInclude Include="System.Transform.h" />

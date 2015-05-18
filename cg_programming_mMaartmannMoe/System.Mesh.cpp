@@ -2,84 +2,38 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "System.Mesh.h"
-#include "System.LoadScene.h"
+/************************************************************************
+Name:	BuildMesh
+Params:	a_sizeX: number of squares in x dir
+		a_sizeY: number of squares in y dir
+Result: Creates an array of vec3's containing vertex position information
+		Used to generate data for the VBO.
+************************************************************************/
+vec3* CMesh::BuildMesh(int a_sizeX, int a_sizeY) {
+	int numIndex = ((((2*a_sizeX) + 3) * a_sizeY) + (a_sizeY-1));
+	vec3 *squares = new vec3[numIndex];
 
-CVertex::CVertex(const CVertex& a_vertex) {
-	this->x = a_vertex.x;
-	this->y = a_vertex.y;
-	this->z = a_vertex.z;
-	this->w = 1.0;
-}
+	int y = a_sizeY;
+	for (int row = 0; row < a_sizeY; row++) {
+		for (int sqInd = 0; sqInd < a_sizeX; sqInd++) {
+			// 0 index:
+			if (sqInd == 0) {
+				// row offset: (row * ((2*a_sizeX)+4)) 
+				squares[(row * ((2*a_sizeX)+4)) + 0] = vec3(0.0f, (GLfloat)y, 0.0f);
+				squares[(row * ((2*a_sizeX)+4)) + 1] = vec3(0.0f, (GLfloat)(y-1), 0.0f);
+			}
+			squares[(row * ((2*a_sizeX)+4)) +(2*sqInd) + 2] = vec3(1.0f+sqInd, (GLfloat)y, 0.0f);
+			squares[(row * ((2*a_sizeX)+4)) +(2*sqInd) + 3] = vec3(1.0f+sqInd, (GLfloat)(y-1), 0.0f);
+		} 
+		// DoubleTap
+		squares[(row * ((2*a_sizeX)+4)) +(2*a_sizeX)+2] = vec3(1.0f+(a_sizeX-1), (GLfloat)(y-1), 0.0f);
 
-CVertex::CVertex(float a_x, float a_y, float a_z) {
-	this->x = a_x;
-	this->y = a_y;
-	this->z = a_z;
-	this->w = 1.0;
-}
-
-CMesh::CMesh () {
-
-}
-
-CMesh::~CMesh () {
-}
-
-void CMesh::AddVertex(const CVertex& a_vertex) {
-	CVertex* vert = new CVertex(a_vertex);
-	this->vertices.push_back(vert);
-}
-
-void CMesh::Scale(float a_amount) {
-	for(int n = 0; n < this->vertices.size(); n++) {
-		CVertex* p = this->vertices[n];
-		p->x *= a_amount;
-		p->y *= a_amount;
-		p->z *= a_amount;
+		if (y > 1) {
+			// Double tap front before starting over
+			squares[(row * ((2*a_sizeX)+4)) +(2*a_sizeX)+3] = vec3(0.0f, (GLfloat)(y-1), 0.0f);
+		}
+		y--;		
 	}
-}
 
-void CMesh::Build() {
-	// Generate VertexBufferObjectID
-	glGenBuffers(1, &this->m_vertexBufferObjectID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->m_vertexBufferObjectID);
-	// Generate a GLfloat[numVerts * numElemetsPerVertex] to fill with mesh data
-	int numVertices = this->vertices.size();
-	int numElementsPerVertex = 4;	// (x, y, z, w) TODO: add texture UV's
-	
-	GLfloat* quads = new GLfloat[numVertices * numElementsPerVertex];
-	for (int n = 0, m = 0; n < numVertices; n++, m += numElementsPerVertex) {
-		CVertex* v = this->vertices[n];
-		quads[m + 0] = v->x;
-		quads[m + 1] = v->y;
-		quads[m + 2] = v->z;
-		quads[m + 3] = v->w;
-
-	}
-	// Attach the buffer data
-	glBufferData(GL_ARRAY_BUFFER, numVertices * numElementsPerVertex * sizeof(float), quads, GL_STATIC_DRAW);
-	
-	// Generate VertexArrayObjectID
-	glGenVertexArrays(1, &this->m_vertexArrayObjectID);
-	glBindVertexArray(this->m_vertexArrayObjectID);
-	// Vertex Attrib Pointer
-	glVertexAttribPointer(
-		0,			//attribute layout
-		3,			//Elements in array
-		GL_FLOAT,	//Each element is of type float
-		GL_FALSE,	//Normalized?
-		0,			//Stride...
-		(void*)0	//Array buffer offset...
-		);
-	// Enable Vertex Attrib
-	glEnableVertexAttribArray(0);
-	delete [] quads;
-}
-
-void CMesh::Render(Camera* a_camera) {
-	// Get variable from shader
-	GLuint MVPMatrixID = glGetUniformLocation(spMain.GetProgramID(), "MVP");
-
-	mat4 MVPMatrix = a_camera->GetProjectionMatrix() * a_camera->GetViewMatrix() * RenderQuad(this->m_vertexBufferObjectID, vec3(this->transform.x, this->transform.y, this->transform.z), vec3(0.05f));
-	glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix[0][0]);
+	return squares;
 }

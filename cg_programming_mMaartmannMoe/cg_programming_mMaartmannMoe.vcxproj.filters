@@ -63,6 +63,9 @@
     <ClCompile Include="APP.World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="System.Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -108,6 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="APP.World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

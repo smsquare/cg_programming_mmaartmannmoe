@@ -12,6 +12,7 @@ class World {
 		virtual ~World();
 
 		void Render(Camera* a_camera);
+		void Update(Camera* a_camera);
 	private:
 		Plane* plane;
 };

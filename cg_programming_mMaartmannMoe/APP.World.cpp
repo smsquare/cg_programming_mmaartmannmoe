@@ -19,28 +19,28 @@ void World::Render(Camera* a_camera) {
 }
 
 void World::Update(Camera* a_camera) {
-	if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+	if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
 		vec3 pos = a_camera->GetPosition();
 		vec3 worldPos = a_camera->GetWorldOrigin();
 		pos.x += 0.1f;
 		worldPos.x += 0.1f;
 		a_camera->SetViewMatrix(pos, worldPos, vec3(0,1,0));
 	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT)) {
 		vec3 pos = a_camera->GetPosition();
 		vec3 worldPos = a_camera->GetWorldOrigin();
 		pos.x -= 0.1f;
 		worldPos.x -= 0.1f;
 		a_camera->SetViewMatrix(pos, worldPos, vec3(0,1,0));
 	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+	if (glfwGetKey(window, GLFW_KEY_UP)) {
 		vec3 pos = a_camera->GetPosition();
 		vec3 worldPos = a_camera->GetWorldOrigin();
 		pos.y += 0.1f;
 		worldPos.y += 0.1f;
 		a_camera->SetViewMatrix(pos, worldPos, vec3(0,1,0));
 	}
-	if (glfwGetKey(window, GLFW_KEY_UP)) {
+	if (glfwGetKey(window, GLFW_KEY_DOWN)) {
 		vec3 pos = a_camera->GetPosition();
 		vec3 worldPos = a_camera->GetWorldOrigin();
 		pos.y -= 0.1f;

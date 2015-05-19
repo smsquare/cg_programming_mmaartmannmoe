@@ -37,3 +37,4 @@ vec3* CMesh::BuildMesh(int a_sizeX, int a_sizeY) {
 
 	return squares;
 }
+

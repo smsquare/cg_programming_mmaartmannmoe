@@ -9,6 +9,9 @@
 #include <iostream>
 #include <stdexcpt.h>
 #include <cmath>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 // OpenGL includes: glew, glfw, glm
 #define GLEW_STATIC

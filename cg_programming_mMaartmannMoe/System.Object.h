@@ -30,5 +30,6 @@ class Object {
 		mat4 Render();
 		GLuint m_numIndices;
 		GLuint m_vertexBufferID;
+		GLuint m_uvBufferID;
 		GLenum m_renderMode;
 };

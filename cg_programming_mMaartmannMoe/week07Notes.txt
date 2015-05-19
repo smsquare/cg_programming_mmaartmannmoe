@@ -1,0 +1,7 @@
+http://ogldev.atspace.co.uk/www/tutorial16/tutorial16.html
+http://www.gamedev.net/page/resources/_/technical/opengl/opengl-texture-mapping-an-introduction-r947
+http://www.cplusplus.com/doc/tutorial/files/
+http://www.opengl-tutorial.org/beginners-tutorials/tutorial-4-a-colored-cube/
+https://www.cse.msu.edu/~cse872/tutorial4.html
+http://www.glprogramming.com/red/chapter09.html
+http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html

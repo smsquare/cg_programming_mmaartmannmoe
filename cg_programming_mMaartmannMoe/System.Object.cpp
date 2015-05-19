@@ -7,6 +7,7 @@
 Object::Object() {
 	m_renderMode = GL_TRIANGLES;
 	m_vertexBufferID = 0;
+	m_uvBufferID = 0;
 	SetPosition(vec3(0));
 	SetScale(vec3(1));
 	m_numIndices = 0;
@@ -57,7 +58,7 @@ GLuint Object::LoadBMP(const char* a_imagePath) {
 
 void Object::LoadTriangles(const GLuint& a_numColoumns, const GLuint& a_numRows, const GLenum& a_renderMode) { 
 	vec3* vertexBuffer = CMesh::BuildMesh(a_numColoumns, a_numRows);
-	
+	//vec3 uvBuffer = 
 	this->m_numIndices = ((((2*a_numColoumns) + 3) * a_numRows) + (a_numRows-1));
 	fprintf(stdout, "x,y: %u, %u\n", a_numColoumns, a_numRows);
 	fprintf(stdout, "test numIndices form: %u\n", m_numIndices);
@@ -70,6 +71,11 @@ void Object::LoadTriangles(const GLuint& a_numColoumns, const GLuint& a_numRows,
 	glGenBuffers(1, &m_vertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * m_numIndices, vertexBuffer, GL_STATIC_DRAW);
+
+	//TODO: ADD IN TEXTURE COORDS
+	//glGenBuffers(1, &m_uvBufferID);
+	//glBindBuffer(GL_ARRAY_BUFFER, m_uvBufferID);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * m_numIndices, uvBuffer, GL_STATIC_DRAW);
 }
 
 void Object::Update(const float& a_deltaTime) {
@@ -84,9 +90,11 @@ void Object::Render(Camera* a_camera) {
 }
 
 mat4 Object::Render() {
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
+	glEnableVertexAttribArray(0); // Vertex position
+	glEnableVertexAttribArray(1); // UV's
 
+	// Bind vertex info
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
 	glVertexAttribPointer(
 		0,			//attribute layout
 		3,			//Elements in array
@@ -96,8 +104,21 @@ mat4 Object::Render() {
 		(void*)0	//Array buffer offset...
 	);
 
+	// Bind UV info
+	glBindBuffer(GL_ARRAY_BUFFER, m_uvBufferID);
+	glVertexAttribPointer(
+		1,			//attribute layout
+		3,			//Elements in array
+		GL_FLOAT,	//Each element is of type float
+		GL_FALSE,	//Normalized?
+		0,			//Stride...
+		(void*)0	//Array buffer offset...
+	);
+
+
 	glDrawArrays(m_renderMode, 0, m_numIndices); // GL_TRIANGLE_STRIP or GL_TRIANGLES
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 
 	mat4 identityMatrix = mat4(1.0f);
 	mat4 translateMatrix = translate(identityMatrix, position);

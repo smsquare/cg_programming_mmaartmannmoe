@@ -56,7 +56,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,11 +72,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="APP.Ball.cpp" />
+    <ClCompile Include="App.Cube.cpp" />
     <ClCompile Include="APP.Initialize.cpp" />
     <ClCompile Include="APP.Paddle.cpp" />
     <ClCompile Include="APP.Plane.cpp" />
@@ -90,11 +91,13 @@
     <ClCompile Include="System.Mesh.cpp" />
     <ClCompile Include="System.Object.cpp" />
     <ClCompile Include="System.Render.cpp" />
+    <ClCompile Include="System.Texture.cpp" />
     <ClCompile Include="System.Transform.cpp" />
     <ClCompile Include="System.Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="APP.Ball.h" />
+    <ClInclude Include="APP.Cube.h" />
     <ClInclude Include="APP.Initialize.h" />
     <ClInclude Include="APP.Paddle.h" />
     <ClInclude Include="APP.Plane.h" />
@@ -108,12 +111,16 @@
     <ClInclude Include="System.Mesh.h" />
     <ClInclude Include="System.Object.h" />
     <ClInclude Include="System.Render.h" />
+    <ClInclude Include="System.Texture.h" />
     <ClInclude Include="System.Transform.h" />
     <ClInclude Include="System.Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SimpleFragmentShader.fragmentshader" />
     <None Include="Shaders\SimpleVertexShader.vertexshader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\level_0.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

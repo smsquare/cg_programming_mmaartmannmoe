@@ -66,6 +66,12 @@
     <ClCompile Include="System.Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="System.Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="App.Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -116,6 +122,12 @@
     <ClInclude Include="System.Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="System.Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="APP.Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SimpleVertexShader.vertexshader">
@@ -124,5 +136,8 @@
     <None Include="Shaders\SimpleFragmentShader.fragmentshader">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\level_0.txt" />
   </ItemGroup>
 </Project>

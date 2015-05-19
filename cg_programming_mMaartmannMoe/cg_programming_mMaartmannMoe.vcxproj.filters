@@ -139,5 +139,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\level_0.txt" />
+    <Text Include="week07Notes.txt" />
   </ItemGroup>
 </Project>
